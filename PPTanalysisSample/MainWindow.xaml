@@ -1,0 +1,26 @@
+﻿<Window x:Class="PPTanalysisSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextSample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="15" x:Name="txt_result"/>
+            <Grid x:Name="sp_sharp" Grid.Column="1" Margin="10">
+                <MediaElement x:Name="mediaPlayer" LoadedBehavior="Manual"/>
+            </Grid>
+        </Grid>
+        <Button Grid.Row="1" Content="ExcuteAnalysisToText" FontSize="15" x:Name="btn_analysis" Click="btn_analysis_Click" Height="80" Width="300"/>
+    </Grid>
+</Window>
