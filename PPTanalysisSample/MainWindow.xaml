@@ -10,17 +10,19 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Margin="15" x:Name="txt_result"/>
-            <Grid x:Name="sp_sharp" Grid.Column="1" Margin="10">
-                <MediaElement x:Name="mediaPlayer" LoadedBehavior="Manual"/>
-            </Grid>
+            <TextBlock HorizontalAlignment="Left" Text="文本" Margin="10,0,0,00"/>
+            <TextBox Margin="10,10,10,0" x:Name="txt_result"/>
+            <Border Grid.Column="1" Margin="10" BorderBrush="AliceBlue" BorderThickness="2">
+                <MediaElement x:Name="mediaPlayer" LoadedBehavior="Manual" Stretch="Fill"/>
+            </Border>
         </Grid>
-        <Button Grid.Row="1" Content="ExcuteAnalysisToText" FontSize="15" x:Name="btn_analysis" Click="btn_analysis_Click" Height="80" Width="300"/>
+        <Button Grid.Row="2" Content="ExcuteAnalysis" FontSize="15" x:Name="btn_analysis" Click="btn_analysis_Click" Height="80" Width="300"/>
     </Grid>
 </Window>
