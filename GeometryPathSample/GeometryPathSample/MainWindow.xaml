@@ -1,0 +1,36 @@
+﻿<Window x:Class="GeometryPathSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GeometryPathSample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Canvas>
+            <Path  Stroke="Red" 
+                      Data="M 120,100 L 300,100 A 20,20 0 0 1 320,120 L 320,180 A 20,20 0 0 1 300,200 
+                  L 185,200 L 165,210 L 143,200 L 120,200 A 20,20 0 0 1 100,180 L 100,120 A 20,20 0 0 1 120,100" />
+        </Canvas>
+        <Canvas Grid.Row="0" Grid.Column="1">
+            <Path Margin="50" Stroke="Blue" Data="M 0,40 A 40,10,0,0,0,250,40 M 0,40 A 40,10,0,0,1,250,40" />
+        </Canvas>
+        <Canvas Grid.Row="1" Grid.Column="1">
+
+            <Viewbox>
+                <Path Margin="50"  Stroke="Blue" Data="M 0,0 L 30,-20 L 60,0 L 50,50 L 10,50 z" />
+            </Viewbox>
+        </Canvas>
+        <!--<Path Grid.Column="0" Stroke="Blue" Data="M908.732232 94.922906l-762.424516 0c-36.913724 0-66.947761 30.034037-66.947761 66.947761l0 482.31798c0 36.919864 30.034037 66.947761 66.947761 66.947761l132.198881 0c21.472034 0 38.937824 17.464767 38.937824 38.938847l0 145.57554 204.329688-175.143972c7.046486-6.036483 16.029068-9.367345 25.331945-9.367345l361.627201 0c36.912701 0 66.946738-30.02892 66.946738-66.948785L975.679993 161.870668C975.67897 124.957966 945.644933 94.922906 908.732232 94.922906z
+              M947.670056 644.188648c0 21.472034-17.46579 38.946011-38.937824 38.946011L547.105031 683.134659c-15.97381 0-31.455409 5.717212-43.560098 16.118096l-158.090575 135.487787L345.454358 750.07321c0-36.905538-30.034037-66.940598-66.947761-66.940598L146.307715 683.132612c-21.472034 0-38.938847-17.47193-38.938847-38.946011L107.368868 161.870668c0-21.479197 17.464767-38.944987 38.938847-38.944987l762.424516 0c21.469987 0 38.937824 17.464767 38.937824 38.944987L947.670056 644.188648 947.670056 644.188648z" />-->
+
+    </Grid>
+</Window>

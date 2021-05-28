@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryPathSample", "GeometryPathSample\GeometryPathSample.csproj", "{3CC4B0DE-6EE5-4BA7-8B09-3D15C4B138C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CC4B0DE-6EE5-4BA7-8B09-3D15C4B138C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CC4B0DE-6EE5-4BA7-8B09-3D15C4B138C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CC4B0DE-6EE5-4BA7-8B09-3D15C4B138C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CC4B0DE-6EE5-4BA7-8B09-3D15C4B138C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B324F4DA-E537-49BE-A6E3-AB8978DE6C9D}
+	EndGlobalSection
+EndGlobal

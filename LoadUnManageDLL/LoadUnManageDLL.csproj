@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="PdfiumViewer" Version="2.13.0" />
+    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
   </ItemGroup>
 
   <ItemGroup>
