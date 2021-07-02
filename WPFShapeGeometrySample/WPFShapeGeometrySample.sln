@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFShapeGeometrySample", "WPFShapeGeometrySample\WPFShapeGeometrySample.csproj", "{EA0854B0-4B8C-43CC-BE6F-271A770E4588}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA0854B0-4B8C-43CC-BE6F-271A770E4588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA0854B0-4B8C-43CC-BE6F-271A770E4588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA0854B0-4B8C-43CC-BE6F-271A770E4588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA0854B0-4B8C-43CC-BE6F-271A770E4588}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6898710F-C999-4465-8A46-96F01C02B709}
+	EndGlobalSection
+EndGlobal
