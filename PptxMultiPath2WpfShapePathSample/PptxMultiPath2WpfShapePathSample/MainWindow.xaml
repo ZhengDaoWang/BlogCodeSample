@@ -13,10 +13,9 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="pptx的文件路径:" VerticalAlignment="Center" FontSize="15" Margin="10"/>
-            <TextBox x:Name="FilePathText"  Height="50" Width="300" Margin="0,0,10,0" TextWrapping="Wrap"/>
+            <TextBox x:Name="FilePathText" FontSize="13" VerticalContentAlignment="Center"  Height="50" Width="300" Margin="0,0,10,0" TextWrapping="Wrap"/>
             <Button x:Name="Button" Content="解析PPT" Click="Button_OnClick" Width="120" Height="40"/>
         </StackPanel>
-        <Path x:Name="Path" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="Blue"/>
-        <Grid x:Name="PathGrid" Grid.Row="1" />
+        <Grid x:Name="PathGrid" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </Window>

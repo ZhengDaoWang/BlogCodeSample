@@ -10,4 +10,10 @@
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.13.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Test.pptx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
