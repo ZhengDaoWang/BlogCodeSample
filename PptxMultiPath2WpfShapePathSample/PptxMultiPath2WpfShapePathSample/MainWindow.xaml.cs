@@ -16,8 +16,9 @@ using System.Windows.Shapes;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
-using Path = System.Windows.Shapes.Path;
 using ShapeProperties = DocumentFormat.OpenXml.Presentation.ShapeProperties;
+using static PptxMultiPath2WpfShapePathSample.ShapeGeometryHelper;
+using System.Reflection;
 
 namespace PptxMultiPath2WpfShapePathSample
 {
@@ -26,23 +27,29 @@ namespace PptxMultiPath2WpfShapePathSample
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string filePath;
         public MainWindow()
         {
             InitializeComponent();
+            var mainExecuteDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            FilePathText.Text = filePath = System.IO.Path.Combine(mainExecuteDirectory, @"Test.pptx");
         }
         private void Button_OnClick(object sender, RoutedEventArgs e)
         {
-            var filePath = @"C:\Users\Ryzen\Desktop\测验\五边形.pptx";
-            if (!string.IsNullOrEmpty(FilePathText.Text))
+            if (string.IsNullOrEmpty(FilePathText.Text))
             {
-                filePath = FilePathText.Text.Trim();
+                PptxMultiPathToGeometry(filePath);
             }
-            PptxMultiPathToGeometry(filePath);
+            else
+            {
+                PptxMultiPathToGeometry(FilePathText.Text);
+            }
         }
         private void PptxMultiPathToGeometry(string filePath)
         {
             if (!File.Exists(filePath) || !filePath.EndsWith(".pptx", StringComparison.OrdinalIgnoreCase))
             {
+                MessageBox.Show("请输入正确的pptx文件路径");
                 return;
             }
             using (var presentationDocument = PresentationDocument.Open(filePath, false))
@@ -73,8 +80,8 @@ namespace PptxMultiPath2WpfShapePathSample
                                     var height = extents.Cy;
                                     if (width.HasValue && height.HasValue)
                                     {
-                                        var points = GetPentagonPoints(width.Value.EmuToPixel(), height.Value.EmuToPixel());
-                                        RenderGeometry(points);
+                                        var geometryPaths = GetGeometryPathFromBorderCallout2(new Emu(width).EmuToPixel().Value, new Emu(height).EmuToPixel().Value);
+                                        RenderGeometry(geometryPaths);
                                     }
                                 }
                             }
@@ -97,13 +104,13 @@ namespace PptxMultiPath2WpfShapePathSample
             }
         }
 
-        private List<Path> CreatePathLst(List<GeometryPath> geometryPaths)
+        private List<System.Windows.Shapes.Path> CreatePathLst(List<GeometryPath> geometryPaths)
         {
-            var pathLst = new List<Path>();
+            var pathLst = new List<System.Windows.Shapes.Path>();
             foreach (var geometryPath in geometryPaths)
             {
                 var geometry = Geometry.Parse(geometryPath.Path);
-                var path = new Path
+                var path = new System.Windows.Shapes.Path
                 {
                     Data = geometry,
                     Fill = geometryPath.IsFilled ? new SolidColorBrush(Color.FromRgb(68, 114, 196)) : null,
