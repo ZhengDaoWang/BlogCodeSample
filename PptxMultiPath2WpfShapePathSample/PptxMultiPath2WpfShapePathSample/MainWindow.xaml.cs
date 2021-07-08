@@ -70,7 +70,7 @@ namespace PptxMultiPath2WpfShapePathSample
                         var presetGeometry = shapeProperties.GetFirstChild<PresetGeometry>();
                         if (presetGeometry != null && presetGeometry.Preset.HasValue)
                         {
-                            if (presetGeometry.Preset == ShapeTypeValues.BorderCallout2)
+                            if (presetGeometry.Preset == ShapeTypeValues.Callout2)
                             {
                                 var transform2D = shapeProperties.GetFirstChild<Transform2D>();
                                 var extents = transform2D?.GetFirstChild<Extents>();
@@ -80,7 +80,7 @@ namespace PptxMultiPath2WpfShapePathSample
                                     var height = extents.Cy;
                                     if (width.HasValue && height.HasValue)
                                     {
-                                        var geometryPaths = GetGeometryPathFromBorderCallout2(new Emu(width).EmuToPixel().Value, new Emu(height).EmuToPixel().Value);
+                                        var geometryPaths = GetGeometryPathFromCallout2(new Emu(width).EmuToPixel().Value, new Emu(height).EmuToPixel().Value);
                                         RenderGeometry(geometryPaths);
                                     }
                                 }
@@ -91,20 +91,29 @@ namespace PptxMultiPath2WpfShapePathSample
             }
         }
 
-        private void RenderGeometry(List<GeometryPath> geometryPaths)
+        /// <summary>
+        /// 渲染形状到界面
+        /// </summary>
+        /// <param name="geometryPaths"></param>
+        private void RenderGeometry(List<ShapePath> geometryPaths)
         {
             if (PathGrid.Children.Count > 0)
             {
                 PathGrid.Children.Clear();
             }
-            var pathGeometry = CreatePathLst(geometryPaths);
-            foreach (var path in pathGeometry)
+            var pathLst = CreatePathLst(geometryPaths);
+            foreach (var path in pathLst)
             {
                 PathGrid.Children.Add(path);
             }
         }
 
-        private List<System.Windows.Shapes.Path> CreatePathLst(List<GeometryPath> geometryPaths)
+        /// <summary>
+        /// 将解析好的geometry path转为Path的形状集合
+        /// </summary>
+        /// <param name="geometryPaths"></param>
+        /// <returns></returns>
+        private List<System.Windows.Shapes.Path> CreatePathLst(List<ShapePath> geometryPaths)
         {
             var pathLst = new List<System.Windows.Shapes.Path>();
             foreach (var geometryPath in geometryPaths)
