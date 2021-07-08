@@ -67,7 +67,7 @@ namespace PptxMultiPath2WpfShapePathSample
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static List<GeometryPath> GetGeometryPathFromBorderCallout2(double width, double height)
+        public static List<ShapePath> GetGeometryPathFromCallout2(double width, double height)
         {
             var (h, w, l, r, t, b, hd2, hd4, hd5, hd6, hd8, ss, hc, vc, ls, ss2, ss4, ss6, ss8, wd2, wd4, wd5, wd6, wd8, wd10, cd2, cd4, cd8) = GetFormulaProperties(width, height);
             //<avLst xmlns="http://schemas.openxmlformats.org/drawingml/2006/main">
@@ -108,7 +108,7 @@ namespace PptxMultiPath2WpfShapePathSample
             var x3 = w * adj6 / 100000;
 
             // <pathLst xmlns="http://schemas.openxmlformats.org/drawingml/2006/main">
-            //  <path extrusionOk="false">
+            //  <path stroke="false" extrusionOk="false">
             //    <moveTo>
             //      <pt x="l" y="t" />
             //    </moveTo>
@@ -136,7 +136,7 @@ namespace PptxMultiPath2WpfShapePathSample
             //  </path>
             //</pathLst>
 
-            var pathLst = new List<GeometryPath>();
+            var pathLst = new List<ShapePath>();
 
             //  <path extrusionOk="false">
             //    <moveTo>
@@ -160,7 +160,7 @@ namespace PptxMultiPath2WpfShapePathSample
             //    <close />
             stringPath.Append("z ");
 
-            pathLst.Add(new GeometryPath(stringPath.ToString()));
+            pathLst.Add(new ShapePath(stringPath.ToString(),isStroke:false));
 
 
             //  <path fill="none" extrusionOk="false">
@@ -179,7 +179,7 @@ namespace PptxMultiPath2WpfShapePathSample
             //    </lnTo>
             _ = LineToToString(stringPath, x3, y3);
 
-            pathLst.Add(new GeometryPath(stringPath.ToString(), FillMode.None));
+            pathLst.Add(new ShapePath(stringPath.ToString(), FillMode.None));
 
 
             return pathLst;

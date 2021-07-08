@@ -1,8 +1,8 @@
 ﻿namespace PptxMultiPath2WpfShapePathSample
 {
-    public readonly struct GeometryPath
+    public readonly struct ShapePath
     {
-        public GeometryPath(string path, FillMode fillMode = FillMode.Norm, bool isStroke = true)
+        public ShapePath(string path, FillMode fillMode = FillMode.Norm, bool isStroke = true)
         {
             Path = path;
             IsStroke = isStroke;
