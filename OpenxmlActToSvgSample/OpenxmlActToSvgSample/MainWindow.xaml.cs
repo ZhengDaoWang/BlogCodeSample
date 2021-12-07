@@ -27,6 +27,7 @@ namespace OpenxmlActToSvgSample
             var stAng = cd4;
             var swAng = -5400000d;
 
+
             StringBuilder stringPath=new StringBuilder();
             var currentPoint=new Point(0, 0);
             stringPath.Append($"M {currentPoint.X} {currentPoint.Y}");
@@ -49,11 +50,18 @@ namespace OpenxmlActToSvgSample
             //是否是顺时针
             var isClockwise = Δθ > 0;
 
+
+            //修复当椭圆弧线进行360°时，起始点和终点一样，会导致弧线变成点，因此-1°才进行计算
+            if (System.Math.Abs(Δθ) == 2 * System.Math.PI)
+            {
+                Δθ = Δθ - Δθ / 360;
+            }
+
             var rx = new Emu(wR).ToPixel().Value;
             var ry = new Emu(hR).ToPixel().Value;
 
             //获取终点坐标
-            var pt = GetArBitraryPoint(rx, ry, swAng, stAng, φ, currentPoint);
+            var pt = GetArBitraryPoint(rx, ry, Δθ, θ1, φ, currentPoint);
 
             currentPoint = pt;
 
