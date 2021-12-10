@@ -1,0 +1,24 @@
+﻿<Window x:Class="GroupShapeTransformationMatricesSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GroupShapeTransformationMatricesSample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="pptx的文件路径:" VerticalAlignment="Center" FontSize="15" Margin="10"/>
+            <TextBox x:Name="FilePathText"  Height="50" Width="300" Margin="0,0,10,0" TextWrapping="Wrap"/>
+            <Button x:Name="Button" Content="解析PPT" Click="Button_OnClick" Width="120" Height="40"/>
+        </StackPanel>
+        <Canvas Grid.Row="1" x:Name="MyCanvas">
+            <Path  x:Name="Path" Stroke="Blue"/>
+        </Canvas>
+    </Grid>
+
+</Window>
