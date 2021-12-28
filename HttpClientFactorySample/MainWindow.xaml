@@ -1,0 +1,24 @@
+﻿<Window x:Class="HttpClientFactorySample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HttpClientFactorySample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Button Height="60" Content="普通HttpClient"  Margin="5" Click="HttpClient_OnClick"/>
+        <Button Grid.Column="1" Height="60" Content="HttpClientFactory" Click="HttpClientFactory_OnClick" Margin="5" />
+        <Button Grid.Column="2" Height="60" Content="HttpClient3" Click="HttpClient3_OnClick" Margin="5" />
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="TextBox"  Margin="5"/>
+    </Grid>
+</Window>
