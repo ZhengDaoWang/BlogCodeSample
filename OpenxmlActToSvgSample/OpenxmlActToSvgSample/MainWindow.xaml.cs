@@ -32,11 +32,21 @@ namespace OpenxmlActToSvgSample
             var currentPoint=new Point(0, 0);
             stringPath.Append($"M {currentPoint.X} {currentPoint.Y}");
 
-            ParseOpenxmlArcTo(stringPath, wR, hR, stAng, swAng, currentPoint);
+            var arcStr = OpenXmlArcToArcStr(stringPath, wR, hR, stAng, swAng, currentPoint);
             this.Path.Data=Geometry.Parse(stringPath.ToString());
         }
 
-        private Point  ParseOpenxmlArcTo(StringBuilder stringPath, double wR, double hR, double stAng, double swAng, Point currentPoint)
+        /// <summary>
+        /// OpenXml Arc 转为SVG Arc 字符串
+        /// </summary>
+        /// <param name="stringPath">路径字符串</param>
+        /// <param name="wR">Emu椭圆半长轴</param>
+        /// <param name="hR">Emu椭圆半短轴</param>
+        /// <param name="stAng">Emu起始角</param>
+        /// <param name="swAng">Emu摆动角</param>
+        /// <param name="currentPoint">当前坐标</param>
+        /// <returns></returns>
+        private string  OpenXmlArcToArcStr(StringBuilder stringPath, double wR, double hR, double stAng, double swAng, Point currentPoint)
         {
             const string comma = ",";
 
@@ -56,7 +66,6 @@ namespace OpenxmlActToSvgSample
             {
                 Δθ = Δθ - Δθ / 360;
             }
-
             var rx = new Emu(wR).ToPixel().Value;
             var ry = new Emu(hR).ToPixel().Value;
 
@@ -83,13 +92,19 @@ namespace OpenxmlActToSvgSample
                    .Append(comma)
                    .Append(pt.Y)
                    .Append(' ');
-            return currentPoint;
+            return stringPath.ToString();
 
         }
 
         /// <summary>
         /// 获取椭圆任意一点坐标
         /// </summary>
+        /// <param name="rx">椭圆半长轴</param>
+        /// <param name="ry">椭圆半短轴</param>
+        /// <param name="Δθ">摆动角度(起始角的摆动角度，也就是起始角+摆动角=结束角)</param>
+        /// <param name="θ1">起始角</param>
+        /// <param name="φ">旋转角</param>
+        /// <param name="currentPoint">起点</param>
         /// <returns></returns>
         private static Point GetArBitraryPoint(double rx, double ry, double Δθ, double θ1, double φ, Point currentPoint)
         {
