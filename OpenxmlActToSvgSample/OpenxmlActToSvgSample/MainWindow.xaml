@@ -7,6 +7,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Path x:Name="Path" Stroke="Blue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition  Height="3*"/>
+        </Grid.RowDefinitions>
+        <Button Grid.ColumnSpan="2" Content="转换" FontSize="36" Margin="10"  Click="ButtonBase_OnClick"/>
+        <Path Grid.Column="0" Grid.Row="1" x:Name="Path" Stroke="Blue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Path Grid.Column="1" Grid.Row="1" x:Name="NewPath" Stroke="Blue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Window>
