@@ -25,7 +25,7 @@ namespace OpenxmlActToSvgSample
             var wR = 172403;
             var hR = 152403;
             var stAng = c / 2;
-            var swAng = 21600000d / 3;
+            var swAng = -21600000d / 3;
 
 
             StringBuilder stringPath = new StringBuilder();
@@ -220,7 +220,6 @@ namespace OpenxmlActToSvgSample
 
                     var (startAngle, swAngle) = GetArcStartAngAndSwAng(x1, y1, x2, y2, fA, fs, rx, ry, phi);
                     StringBuilder stringPath = new StringBuilder();
-                    var currentPoint = new Point(0, 0);
                     stringPath.Append($"M {x1} {y1}");
                     var openXmlArcToArcStrNew = OpenXmlArcToArcStrNew(stringPath, rx, ry, phi, startAngle, swAngle, pathFigure.StartPoint);
                     this.NewPath.Data = Geometry.Parse(openXmlArcToArcStrNew);
@@ -262,7 +261,18 @@ namespace OpenxmlActToSvgSample
             var a = Math.Pow(rx, 2) * Math.Pow(ry, 2) - Math.Pow(rx, 2) * Math.Pow(y1_, 2) - Math.Pow(ry, 2) * Math.Pow(x1_, 2);
             var b = Math.Pow(ry, 2) * Math.Pow(y1_, 2) + Math.Pow(ry, 2) * Math.Pow(x1_, 2);
 
-            var matrixCxCy = Math.Sqrt(a / b) * DenseMatrix.OfArray(new[,]
+            double c = 0;
+            if (fA == fs)
+            {
+                c = -Math.Sqrt(a / b);
+            }
+            else
+            {
+                c = Math.Sqrt(a / b);
+            }
+
+
+            var matrixCxCy = c * DenseMatrix.OfArray(new[,]
             {
                 { rx*y1_/ry},
                 { -ry*x1_/rx}
