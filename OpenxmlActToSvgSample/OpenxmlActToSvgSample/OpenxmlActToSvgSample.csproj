@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="dotnetCampus.OpenXmlUnitConverter" Version="1.5.1" />
-    <PackageReference Include="MathNet.Numerics" Version="5.0.0-alpha02" />
   </ItemGroup>
 
 </Project>
