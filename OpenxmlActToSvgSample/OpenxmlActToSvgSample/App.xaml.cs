@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace OpenxmlActToSvgSample
+namespace OpenXmlActToSvgSample
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -1,11 +1,11 @@
 ﻿using dotnetCampus.OpenXmlUnitConverter;
-using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using Matrix = System.Windows.Media.Matrix;
 
-namespace OpenxmlActToSvgSample
+namespace OpenXmlActToSvgSample
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -16,16 +16,14 @@ namespace OpenxmlActToSvgSample
         {
             InitializeComponent();
 
-            //Openxml的360° circle
+            //OpenXml的360° circle
             const double c = 21600000d;
-            //circle divide 4
-            var cd4 = c / 4;
 
             //<arcTo wR="152403" hR="152403" stAng="cd4" swAng="-5400000" />
             var wR = 172403;
             var hR = 152403;
             var stAng = c / 2;
-            var swAng = -21600000d / 3;
+            var swAng = -c / 3;
 
 
             StringBuilder stringPath = new StringBuilder();
@@ -71,7 +69,7 @@ namespace OpenxmlActToSvgSample
             var ry = new Emu(hR).ToPixel().Value;
 
             //获取终点坐标
-            var pt = GetArBitraryPoint(rx, ry, Δθ, θ1, φ, currentPoint);
+            var pt = GetArcArbitraryPoint(rx, ry, Δθ, θ1, φ, currentPoint);
 
             currentPoint = pt;
 
@@ -109,11 +107,10 @@ namespace OpenxmlActToSvgSample
         /// <param name="swAng">摆动角</param>
         /// <param name="currentPoint">当前坐标</param>
         /// <returns></returns>
-        private string OpenXmlArcToArcStrNew(StringBuilder stringPath, double rx, double ry, double φ, double stAng, double swAng, Point currentPoint)
+        private string SvgArcToArcStr(StringBuilder stringPath, double rx, double ry, double φ, double stAng, double swAng, Point currentPoint)
         {
             const string comma = ",";
 
-            //将Openxml的角度转为真实的角度
             var θ1 = stAng / 180 * Math.PI;
             var Δθ = swAng / 180 * Math.PI;
             //是否是大弧
@@ -129,7 +126,7 @@ namespace OpenxmlActToSvgSample
             }
 
             //获取终点坐标
-            var pt = GetArBitraryPoint(rx, ry, Δθ, θ1, φ, currentPoint);
+            var pt = GetArcArbitraryPoint(rx, ry, Δθ, θ1, φ, currentPoint);
 
             currentPoint = pt;
 
@@ -156,7 +153,7 @@ namespace OpenxmlActToSvgSample
         }
 
         /// <summary>
-        /// 获取椭圆任意一点坐标
+        /// 获取椭圆任意一点坐标(终点)
         /// </summary>
         /// <param name="rx">椭圆半长轴</param>
         /// <param name="ry">椭圆半短轴</param>
@@ -165,37 +162,22 @@ namespace OpenxmlActToSvgSample
         /// <param name="φ">旋转角</param>
         /// <param name="currentPoint">起点</param>
         /// <returns></returns>
-        private static Point GetArBitraryPoint(double rx, double ry, double Δθ, double θ1, double φ, Point currentPoint)
+        private static Point GetArcArbitraryPoint(double rx, double ry, double Δθ, double θ1, double φ, Point currentPoint)
         {
             //开始点的椭圆任意一点的二维矩阵方程式
-            var matrixX1Y1 = DenseMatrix.OfArray(new double[2, 1]
-            {
-                { currentPoint.X},
-                { currentPoint.Y}
-            });
+            var matrixX1Y1 = new Matrix { M11 = currentPoint.X, M21 = currentPoint.Y };
 
-            var matrix1 = DenseMatrix.OfArray(new double[2, 2]
-            {
-            { Math.Cos(φ),-Math.Sin(φ)},
-            { Math.Sin(φ),Math.Cos(φ)}
-            });
-            var matrix2 = DenseMatrix.OfArray(new double[2, 1]
-            {
-                { rx*Math.Cos(θ1)},
-                { ry*Math.Sin(θ1)}
-            });
-            var matrixCxCy = matrixX1Y1 - (matrix1 * matrix2);
+            var matrix1 = new Matrix { M11 = Math.Cos(φ), M12 = -Math.Sin(φ), M21 = Math.Sin(φ), M22 = Math.Cos(φ) };
+            var matrix2 = new Matrix { M11 = rx * Math.Cos(θ1), M21 = ry * Math.Sin(θ1) };
+            var multiplyMatrix1Matrix2 = Matrix.Multiply(matrix1, matrix2);
+            var matrixCxCy = new Matrix { M11 = matrixX1Y1.M11 - multiplyMatrix1Matrix2.M11, M21 = matrixX1Y1.M21 - multiplyMatrix1Matrix2.M21 };
 
             //终点的椭圆任意一点的二维矩阵方程式
-            var matrix3 = DenseMatrix.OfArray(new double[2, 1]
-            {
-                { rx*Math.Cos(θ1+Δθ)},
-                { ry*Math.Sin(θ1+Δθ)}
-            });
+            var matrix3 = new Matrix { M11 = rx * Math.Cos(θ1 + Δθ), M21 = ry * Math.Sin(θ1 + Δθ) };
+            var multiplyMatrix1Matrix3 = Matrix.Multiply(matrix1, matrix3);
+            var matrixX2Y2 = new Matrix { M11 = multiplyMatrix1Matrix3.M11 + matrixCxCy.M11, M21 = multiplyMatrix1Matrix3.M21 + matrixCxCy.M21 };
 
-            var matrixX2Y2 = matrix1 * matrix3 + matrixCxCy;
-
-            return new Point(matrixX2Y2.Values[0], matrixX2Y2.Values[1]);
+            return new Point(matrixX2Y2.M11, matrixX2Y2.M21);
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -221,7 +203,7 @@ namespace OpenxmlActToSvgSample
                     var (startAngle, swAngle) = GetArcStartAngAndSwAng(x1, y1, x2, y2, fA, fs, rx, ry, phi);
                     StringBuilder stringPath = new StringBuilder();
                     stringPath.Append($"M {x1} {y1}");
-                    var openXmlArcToArcStrNew = OpenXmlArcToArcStrNew(stringPath, rx, ry, phi, startAngle, swAngle, pathFigure.StartPoint);
+                    var openXmlArcToArcStrNew = SvgArcToArcStr(stringPath, rx, ry, phi, startAngle, swAngle, pathFigure.StartPoint);
                     this.NewPath.Data = Geometry.Parse(openXmlArcToArcStrNew);
                 }
 
@@ -243,20 +225,13 @@ namespace OpenxmlActToSvgSample
         /// <returns></returns>
         private static (double startAngle, double swAngle) GetArcStartAngAndSwAng(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double φ)
         {
-            //开始点的椭圆任意一点的二维矩阵方程式
-            var matrixX1Y1 = DenseMatrix.OfArray(new double[2, 2]
-                {
-                    {Math.Cos(φ),Math.Sin(φ)},
-                    {-Math.Sin(φ),Math.Cos(φ)}
-                }) *
-            DenseMatrix.OfArray(new double[2, 1]
-            {
-                { (x1-x2)/2},
-                { (y1-y2)/2}
-            });
 
-            var x1_ = matrixX1Y1.Values[0];
-            var y1_ = matrixX1Y1.Values[1];
+            var matrix1 = new Matrix { M11 = Math.Cos(φ), M12 = Math.Sin(φ), M21 = -Math.Sin(φ), M22 = Math.Cos(φ) };
+            var matrix2 = new Matrix { M11 = (x1 - x2) / 2, M21 = (y1 - y2) / 2 };
+            var matrixX1Y1 = Matrix.Multiply(matrix1, matrix2);
+
+            var x1_ = matrixX1Y1.M11;
+            var y1_ = matrixX1Y1.M21;
 
             var a = Math.Pow(rx, 2) * Math.Pow(ry, 2) - Math.Pow(rx, 2) * Math.Pow(y1_, 2) - Math.Pow(ry, 2) * Math.Pow(x1_, 2);
             var b = Math.Pow(ry, 2) * Math.Pow(y1_, 2) + Math.Pow(ry, 2) * Math.Pow(x1_, 2);
@@ -271,15 +246,10 @@ namespace OpenxmlActToSvgSample
                 c = Math.Sqrt(a / b);
             }
 
+            var matrixCxCy = new Matrix { M11 = c * (rx * y1_ / ry), M21 = c * (-ry * x1_ / rx) };
 
-            var matrixCxCy = c * DenseMatrix.OfArray(new[,]
-            {
-                { rx*y1_/ry},
-                { -ry*x1_/rx}
-            });
-
-            var cx_ = matrixCxCy.Values[0];
-            var cy_ = matrixCxCy.Values[1];
+            var cx_ = matrixCxCy.M11;
+            var cy_ = matrixCxCy.M21;
 
 
             //求开始角
@@ -287,18 +257,18 @@ namespace OpenxmlActToSvgSample
             //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
 
             //向量U的坐标
-            double uv_x = 1;
-            double uv_y = 0;
+            double vectorUx = 1;
+            double vectorUy = 0;
 
             //向量V的坐标
-            double vv_x = (x1_ - cx_) / rx;
-            double vv_y = (y1_ - cy_) / ry;
+            double vectorVx = (x1_ - cx_) / rx;
+            double vectorVy = (y1_ - cy_) / ry;
 
 
-            var multi = uv_x * vv_x + uv_y * vv_y; //两向量的乘积
-            var vu_val = Math.Sqrt(uv_x * uv_x + uv_y * uv_y);//向量U的模
-            var vv_val = Math.Sqrt(vv_x * vv_x + vv_y * vv_y);//向量V的模
-            var cosResult = multi / (vu_val * vv_val);
+            var multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
+            var vectorUMod = Math.Sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
+            var vectorVMod = Math.Sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
+            var cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
 
             var startAngle = Math.Acos(cosResult) * 180 / Math.PI;
 
@@ -308,17 +278,17 @@ namespace OpenxmlActToSvgSample
             //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
 
             //向量U的坐标
-            uv_x = (x1_ - cx_) / rx;
-            uv_y = (y1_ - cy_) / ry;
+            vectorUx = (x1_ - cx_) / rx;
+            vectorUy = (y1_ - cy_) / ry;
 
             //向量V的坐标
-            vv_x = (-x1_ - cx_) / rx;
-            vv_y = (-y1_ - cy_) / ry;
+            vectorVx = (-x1_ - cx_) / rx;
+            vectorVy = (-y1_ - cy_) / ry;
 
-            multi = uv_x * vv_x + uv_y * vv_y; //两向量的乘积
-            vu_val = Math.Sqrt(uv_x * uv_x + uv_y * uv_y);//向量U的模
-            vv_val = Math.Sqrt(vv_x * vv_x + vv_y * vv_y);//向量V的模
-            cosResult = multi / (vu_val * vv_val);
+            multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
+            vectorUMod = Math.Sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
+            vectorVMod = Math.Sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
+            cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
 
             var swAngle = Math.Acos(cosResult) * 180 / Math.PI;
 
