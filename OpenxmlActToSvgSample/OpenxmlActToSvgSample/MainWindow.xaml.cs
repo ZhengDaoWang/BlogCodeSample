@@ -193,17 +193,18 @@ namespace OpenXmlActToSvgSample
                     var y1 = pathFigure.StartPoint.Y;
                     var rx = arcSegment.Size.Width;
                     var ry = arcSegment.Size.Height;
-                    var phi = arcSegment.RotationAngle;
+                    var φ = arcSegment.RotationAngle;
                     var fA = arcSegment.IsLargeArc ? 1 : 0;
                     var fs = arcSegment.SweepDirection is SweepDirection.Clockwise ? 1 : 0;
                     var x2 = arcSegment.Point.X;
                     var y2 = arcSegment.Point.Y;
 
 
-                    var (startAngle, swAngle) = GetArcStartAngAndSwAng(x1, y1, x2, y2, fA, fs, rx, ry, phi);
+                    var (startAngle, swAngle) = GetArcStartAngAndSwAng(x1, y1, x2, y2, fA, fs, rx, ry, φ);
+                    var arcCenterPoint = GetArcCenterPoint(x1, y1, x2, y2, fA, fs, rx, ry, φ);
                     StringBuilder stringPath = new StringBuilder();
                     stringPath.Append($"M {x1} {y1}");
-                    var openXmlArcToArcStrNew = SvgArcToArcStr(stringPath, rx, ry, phi, startAngle, swAngle, pathFigure.StartPoint);
+                    var openXmlArcToArcStrNew = SvgArcToArcStr(stringPath, rx, ry, φ, startAngle, swAngle, pathFigure.StartPoint);
                     this.NewPath.Data = Geometry.Parse(openXmlArcToArcStrNew);
                 }
 
@@ -303,6 +304,54 @@ namespace OpenXmlActToSvgSample
 
 
             return (startAngle, swAngle);
+
+        }
+
+
+        /// <summary>
+        /// 获取弧线的椭圆圆心
+        /// </summary>
+        /// <param name="x1">起点X</param>
+        /// <param name="y1">起点Y</param>
+        /// <param name="x2">终点X</param>
+        /// <param name="y2">终点Y</param>
+        /// <param name="fA">优劣弧:1 优弧  0劣弧</param>
+        /// <param name="fs">顺逆时针绘制：1 顺时针  0 逆时针</param>
+        /// <param name="rx">椭圆半长轴</param>
+        /// <param name="ry">椭圆半短轴</param>
+        /// <param name="φ">旋转角</param>
+        /// <returns></returns>
+        private static Point GetArcCenterPoint(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double φ)
+        {
+
+            var matrix1 = new Matrix { M11 = Math.Cos(φ), M12 = Math.Sin(φ), M21 = -Math.Sin(φ), M22 = Math.Cos(φ) };
+            var matrix2 = new Matrix { M11 = (x1 - x2) / 2, M21 = (y1 - y2) / 2 };
+            var matrixX1Y1 = Matrix.Multiply(matrix1, matrix2);
+
+            var x1_ = matrixX1Y1.M11;
+            var y1_ = matrixX1Y1.M21;
+
+            var a = Math.Pow(rx, 2) * Math.Pow(ry, 2) - Math.Pow(rx, 2) * Math.Pow(y1_, 2) - Math.Pow(ry, 2) * Math.Pow(x1_, 2);
+            var b = Math.Pow(ry, 2) * Math.Pow(y1_, 2) + Math.Pow(ry, 2) * Math.Pow(x1_, 2);
+
+            double c = 0;
+            if (fA == fs)
+            {
+                c = -Math.Sqrt(a / b);
+            }
+            else
+            {
+                c = Math.Sqrt(a / b);
+            }
+
+            var matrixCx_Cy_ = new Matrix { M11 = c * (rx * y1_ / ry), M21 = c * (-ry * x1_ / rx) };
+
+            var tempMatrix = new Matrix { M11 = Math.Cos(φ), M12 = -Math.Sin(φ), M21 = Math.Sin(φ), M22 = Math.Cos(φ) };
+            var multiplyMatrix = Matrix.Multiply(tempMatrix, matrixCx_Cy_);
+
+            var matrixCxCy=new Matrix(){M11 = multiplyMatrix.M11+((x1+x2)/2),M21= multiplyMatrix.M21+((y1+y2)/2) };
+
+            return new Point(matrixCxCy.M11, matrixCxCy.M21);
 
         }
 
