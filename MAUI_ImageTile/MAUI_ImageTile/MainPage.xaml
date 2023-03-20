@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MAUI_ImageTile.MainPage" x:Name="Root">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Path x:Name="ShapePathGeometry"  Grid.RowSpan="2"  
+              Stroke="{Binding Stroke,Mode=TwoWay,}" StrokeThickness="{Binding StrokeThickness,Mode=TwoWay}" 
+              Fill="{Binding ImageBrushFill,Mode=TwoWay}" 
+              Data="{Binding ShapeGeometry,Mode=TwoWay"
+              HorizontalOptions="Center" VerticalOptions="Center" />
+        <StackLayout Grid.Column="1" Width="300">
+            <Slider x:Name="OffsetXSliderSetter" Header="偏移量X" Margin="0 16" />
+            <Slider x:Name="OffsetYSliderSetter" Header="偏移量Y" Margin="0 16" />
+            <Slider x:Name="ScaleXSliderSetter" Header="刻度X" Margin="0 16" />
+            <Slider x:Name="ScaleYSliderSetter" Header="刻度Y" Margin="0 16" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Text="对齐方式" VerticalOptions="Center" TextColor="#666666"/>
+                <ComboBox Grid.Column="1" HorizontalAlignment="Right" x:Name="AlignmentComboBox" Margin="0 16" Width="90" />
+                <Label Grid.Row="1" Text="镜像类型" VerticalOptions="Center" TextColor="#666666"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" x:Name="FlipTypeComboBox" Margin="0 16" Width="60" />
+            </Grid>
+        </StackLayout>
+        <Button Grid.Column="1" Grid.Row="1" Content="应用" Click="ButtonBase_OnClick" Width="200" Height="70"></Button>
+
+    </Grid>
+
+</ContentPage>
