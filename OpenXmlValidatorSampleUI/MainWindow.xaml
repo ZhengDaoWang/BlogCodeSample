@@ -1,0 +1,23 @@
+﻿<Window x:Class="OpenXmlValidatorSampleUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenXmlValidatorSampleUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="1500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="100"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"  Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="请输入所要校验的Pptx文件路径：" Margin="10,0,0,0" VerticalAlignment="Center"  FontSize="16"/>
+            <TextBox x:Name="PptxFilePathTextBox" Height="40" VerticalContentAlignment="Center"  Width="550"  FontSize="15" Margin="10,0,0,0" />
+            <Button Margin="20,0,0,0"  Width="150"  Content="执行检验" FontSize="20" Click="ButtonBase_OnClick"/>
+            <TextBlock Text="校验版本：" Margin="10,0,0,0" VerticalAlignment="Center"  FontSize="20"/>
+            <ComboBox x:Name="VersionComBox" Width="120" VerticalContentAlignment="Center" Height="30" />
+        </StackPanel>
+        <TextBox x:Name="OutputTextBox" Grid.Row="1" Margin="10"  FontSize="13" TextWrapping="Wrap" />
+    </Grid>
+</Window>
