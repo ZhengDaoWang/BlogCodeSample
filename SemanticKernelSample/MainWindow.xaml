@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SemanticKernelSample"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="SemanticKernelSample" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -17,9 +17,13 @@
                 <RowDefinition />
                 <RowDefinition  Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="请输入你的提示词："  FontSize="20"/>
-            <TextBox Grid.Row="1" x:Name="PromptTextBox"   Margin="5"/>
-            <Button Grid.Row="2" x:Name="ExecuteButton" Width="80" Height="40" Margin="2" HorizontalAlignment="Right"  Content="执行" Click="ExecuteButton_OnClick" />
+            <TextBlock Grid.Row="0" Text="请输入你的提示词：" Margin="5,5,0,0" FontSize="16" />
+            <TextBox Grid.Row="1" x:Name="PromptTextBox"   Margin="5" TextWrapping="Wrap"/>
+            <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button  x:Name="ExecuteButton" Width="80" Height="40" Margin="4" HorizontalAlignment="Right"  Content="执行" Click="ExecuteButton_OnClick" />
+                <Button  x:Name="ExecuteStreamButton" Width="80" Height="40" Margin="4" HorizontalAlignment="Right"  Content="流式执行" Click="ExecuteStreamButton_OnClick" />
+            </StackPanel>
+            
         </Grid>
         <TextBox Grid.Row="1" x:Name="ResponseTextBox"  TextWrapping="Wrap" Margin="5"/>
     </Grid>
