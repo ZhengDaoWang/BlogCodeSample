@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -18,7 +16,9 @@ namespace SemanticKernelSample
             base.OnStartup(e);
 
             var builder = Kernel.CreateBuilder();
-            builder.Services.AddSingleton<IChatCompletionService, OllamaChatCompletionService>();
+            builder.Services.AddKeyedSingleton<IChatCompletionService, Llama3OllamaChatCompletionService>("llama3");
+            builder.Services.AddKeyedSingleton<IChatCompletionService, Phi3OllamaChatCompletionService>("phi3");
+            builder.Services.AddKeyedSingleton<IChatCompletionService, LlavaOllamaChatCompletionService>("llava");
             SkKernel = builder.Build();
         }
     }

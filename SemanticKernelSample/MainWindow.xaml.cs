@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using Microsoft.SemanticKernel;
 using System.Windows;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -14,6 +13,9 @@ namespace SemanticKernelSample
         public MainWindow()
         {
             InitializeComponent();
+
+            SemanticModeComBox.ItemsSource = Enum.GetValues<SemanticMode>();
+            SemanticModeComBox.SelectedIndex = 0;
         }
 
 
@@ -26,26 +28,36 @@ namespace SemanticKernelSample
                 return;
             }
 
-            var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>();
-            var chatHistory = new ChatHistory(promptText);
-            var stopwatch = Stopwatch.StartNew();
-            ResponseTextBox.Text += "\n 执行中...........";
-            var responseResult = await chatCompletionService.GetChatMessageContentsAsync(chatHistory);
-            stopwatch.Stop();
-            ResponseTextBox.Text += $"\n 执行耗时：{stopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
-            ResponseTextBox.ScrollToEnd();
-
-            var stringBuilder = new StringBuilder();
-            foreach (var chatMessageContent in responseResult)
+            try
             {
-                stringBuilder.Append(chatMessageContent);
+                var semanticMode = GetSemanticMode();
+                var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>(semanticMode);
+                var chatHistory = new ChatHistory(promptText);
+                var stopwatch = Stopwatch.StartNew();
+                ResponseTextBox.Text += "\n 执行中...........";
+                var responseResult = await chatCompletionService.GetChatMessageContentsAsync(chatHistory);
+                stopwatch.Stop();
+                ResponseTextBox.Text += $"\n 执行耗时：{stopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
+                ResponseTextBox.ScrollToEnd();
+
+                var stringBuilder = new StringBuilder();
+                foreach (var chatMessageContent in responseResult)
+                {
+                    stringBuilder.Append(chatMessageContent);
+                }
+
+                var result = $"{stringBuilder} \n";
+
+                ResponseTextBox.Text += result;
+
+                ResponseTextBox.ScrollToEnd();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Error：{exception.Message}");
             }
 
-            var result = $"{stringBuilder} \n";
-
-            ResponseTextBox.Text += result;
-
-            ResponseTextBox.ScrollToEnd();
+            
         }
 
         private async void ExecuteStreamButton_OnClick(object sender, RoutedEventArgs e)
@@ -57,27 +69,60 @@ namespace SemanticKernelSample
                 return;
             }
 
-            var isFirst = true;
-            var executeStopwatch = Stopwatch.StartNew();
-            ResponseTextBox.Text += "\n 执行中...........";
-            var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>();
-            var chatHistory = new ChatHistory(promptText);
-            await foreach (var streamingChatMessageContent in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
+            try
             {
-                if (isFirst)
+                var isFirst = true;
+                var executeStopwatch = Stopwatch.StartNew();
+                ResponseTextBox.Text += "\n 执行中...........";
+                var semanticMode = GetSemanticMode();
+                var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>(semanticMode);
+                var chatHistory = new ChatHistory(promptText);
+                await foreach (var streamingChatMessageContent in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
                 {
-                    isFirst = false;
-                    executeStopwatch.Stop();
-                    ResponseTextBox.Text += $"\n 执行耗时：{executeStopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
+                    if (isFirst)
+                    {
+                        isFirst = false;
+                        executeStopwatch.Stop();
+                        ResponseTextBox.Text += $"\n 执行耗时：{executeStopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
+                        ResponseTextBox.ScrollToEnd();
+
+                    }
+
+                    var result = $" {streamingChatMessageContent}";
+                    ResponseTextBox.Text += result;
                     ResponseTextBox.ScrollToEnd();
 
                 }
-
-                var result = $" {streamingChatMessageContent}";
-                ResponseTextBox.Text += result;
-                ResponseTextBox.ScrollToEnd();
-
             }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Error：{exception.Message}");
+            }
+
         }
+
+
+        public string GetSemanticMode()
+        {
+            if (SemanticModeComBox.SelectionBoxItem is not SemanticMode semanticMode) return "llama3";
+            return semanticMode switch
+            {
+                SemanticMode.Llama3 => "llama3",
+                SemanticMode.Phi3 => "phi3",
+                SemanticMode.Llava => "llava",
+                _ => "llama3"
+            };
+        }
+
+    }
+
+
+    enum SemanticMode
+    {
+        Llama3,
+
+        Phi3,
+
+        Llava
     }
 }
