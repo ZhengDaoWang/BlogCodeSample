@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.SemanticKernel;
 using System.Windows;
+using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace SemanticKernelSample
 {
@@ -24,15 +26,22 @@ namespace SemanticKernelSample
                 return;
             }
 
+            var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>();
+            var chatHistory = new ChatHistory(promptText);
             var stopwatch = Stopwatch.StartNew();
             ResponseTextBox.Text += "\n 执行中...........";
-            var responseResult = await App.SkKernel.InvokePromptAsync(promptText);
+            var responseResult = await chatCompletionService.GetChatMessageContentsAsync(chatHistory);
             stopwatch.Stop();
             ResponseTextBox.Text += $"\n 执行耗时：{stopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
             ResponseTextBox.ScrollToEnd();
 
+            var stringBuilder = new StringBuilder();
+            foreach (var chatMessageContent in responseResult)
+            {
+                stringBuilder.Append(chatMessageContent);
+            }
 
-            var result = $"{responseResult} \n";
+            var result = $"{stringBuilder} \n";
 
             ResponseTextBox.Text += result;
 
@@ -50,9 +59,10 @@ namespace SemanticKernelSample
 
             var isFirst = true;
             var executeStopwatch = Stopwatch.StartNew();
-            var executeTotalStopwatch = Stopwatch.StartNew();
             ResponseTextBox.Text += "\n 执行中...........";
-            await foreach (var streamingKernelContent in App.SkKernel.InvokePromptStreamingAsync(promptText))
+            var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>();
+            var chatHistory = new ChatHistory(promptText);
+            await foreach (var streamingChatMessageContent in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
             {
                 if (isFirst)
                 {
@@ -63,14 +73,11 @@ namespace SemanticKernelSample
 
                 }
 
-                var result = $" {streamingKernelContent}";
+                var result = $" {streamingChatMessageContent}";
                 ResponseTextBox.Text += result;
                 ResponseTextBox.ScrollToEnd();
 
             }
-            executeTotalStopwatch.Stop();
-            ResponseTextBox.Text += $"\n 流式总执行耗时：{executeTotalStopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
-            ResponseTextBox.ScrollToEnd();
         }
     }
 }

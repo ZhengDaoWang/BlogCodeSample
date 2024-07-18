@@ -60,7 +60,7 @@ namespace SemanticKernelSample
                 }
             },cancellationToken);
 
-            while (true)
+            while (channel.Reader.CanPeek)
             {
                 // 从下载队列拉取结果
                 var stream = await channel.Reader.ReadAsync(cancellationToken);
