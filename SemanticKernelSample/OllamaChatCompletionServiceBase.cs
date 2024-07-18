@@ -11,17 +11,17 @@ namespace SemanticKernelSample
     {
         public IReadOnlyDictionary<string, object?>? Attributes { get; }
 
-        private readonly OllamaApiClient _ollamaClient;
+        protected readonly OllamaApiClient OllamaClient;
 
         protected OllamaChatCompletionServiceBase(string modelName)
         {
-            _ollamaClient=new("http://localhost:11434", modelName);
+            OllamaClient=new("http://localhost:11434", modelName);
         }
 
-        public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings = null,
+        public virtual async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings = null,
             Kernel? kernel = null, CancellationToken cancellationToken = new CancellationToken())
         {
-            var chat = new Chat(_ollamaClient, _ => { });
+            var chat = new Chat(OllamaClient, _ => { });
 
             var lastMessage = chatHistory.LastOrDefault();
             if (lastMessage is null || string.IsNullOrEmpty(lastMessage.Content))
@@ -44,7 +44,7 @@ namespace SemanticKernelSample
             return chatMessageContents;
         }
 
-        public async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(ChatHistory chatHistory,
+        public virtual async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(ChatHistory chatHistory,
             PromptExecutionSettings? executionSettings = null, Kernel? kernel = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = new CancellationToken())
         {
@@ -62,7 +62,7 @@ namespace SemanticKernelSample
             ConversationContext? context = null;
             _ = Task.Run(async () =>
             {
-                await foreach (var stream in _ollamaClient.StreamCompletion(question, context, cancellationToken))
+                await foreach (var stream in OllamaClient.StreamCompletion(question, context, cancellationToken))
                 {
                     await channel.Writer.WriteAsync(stream!, cancellationToken);
                 }
