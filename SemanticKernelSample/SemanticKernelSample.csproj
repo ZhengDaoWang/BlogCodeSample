@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LLamaSharp" Version="0.14.0" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.15.1" />
     <PackageReference Include="OllamaSharp" Version="2.0.10" />
   </ItemGroup>
