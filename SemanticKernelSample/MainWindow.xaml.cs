@@ -37,7 +37,7 @@ namespace SemanticKernelSample
                 var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>(semanticMode);
                 var chatHistory = new ChatHistory(promptText);
                 var stopwatch = Stopwatch.StartNew();
-                ResponseTextBox.Text += "\n 执行中...........";
+                ResponseTextBox.Text += $"\n当前模型：{semanticMode} 执行中...........";
                 var responseResult = await chatCompletionService.GetChatMessageContentsAsync(chatHistory);
                 stopwatch.Stop();
                 ResponseTextBox.Text += $"\n 执行耗时：{stopwatch.Elapsed.TotalSeconds} s \n -------------------  \n";
@@ -76,8 +76,8 @@ namespace SemanticKernelSample
             {
                 var isFirst = true;
                 var executeStopwatch = Stopwatch.StartNew();
-                ResponseTextBox.Text += "\n 执行中...........";
                 var semanticMode = GetSemanticMode();
+                ResponseTextBox.Text += $"\n当前模型：{semanticMode} 执行中...........";
                 var chatCompletionService = App.SkKernel.GetRequiredService<IChatCompletionService>(semanticMode);
                 var chatHistory = new ChatHistory(promptText);
                 await foreach (var streamingChatMessageContent in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
@@ -154,7 +154,7 @@ namespace SemanticKernelSample
             string base64String = Convert.ToBase64String(imageBytes);
             var images = new List<string>() { base64String };
             ResponseTextBox.Text += $"\n 添加图片成功：{imagePath} \n ";
-            ResponseTextBox.Text += " 执行中........... \n \n";
+            ResponseTextBox.Text += $"当前模型：{semanticMode} 执行中........... \n \n";
 
             var chatMessageContents = await Task.Run(async () =>
             {
