@@ -18,7 +18,8 @@ namespace SemanticKernelSample
             OllamaClient=new("http://localhost:11434", modelName);
         }
 
-        public virtual async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings = null,
+        public virtual async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, 
+            PromptExecutionSettings? executionSettings = null,
             Kernel? kernel = null, CancellationToken cancellationToken = new CancellationToken())
         {
             var chat = new Chat(OllamaClient, _ => { });
@@ -50,7 +51,6 @@ namespace SemanticKernelSample
         {
             var channel = Channel.CreateBounded<GenerateCompletionResponseStream>(new BoundedChannelOptions(100)
             {
-                // 如果满了就等待
                 FullMode = BoundedChannelFullMode.Wait,
                 SingleWriter = true,
                 SingleReader = true
@@ -70,7 +70,6 @@ namespace SemanticKernelSample
 
             while (channel.Reader.CanPeek)
             {
-                // 从下载队列拉取结果
                 var stream = await channel.Reader.ReadAsync(cancellationToken);
                 yield return new StreamingChatMessageContent(AuthorRole.Assistant, stream.Response);
             }
